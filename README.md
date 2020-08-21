@@ -11,6 +11,8 @@ See [this](examples/elf_header_parser.py)
 Contributers are welcome!
 
 ### TODO:
+- Method documentation
+- Documentation
 - More examples
 - Tests
 - Dynamic sized structs (e.g. `struct a{ int len; char data[] };`)
