@@ -2,3 +2,7 @@ venv
 .idea/
 *.pyc
 d
+build/
+dist/
+*.egg-info
+
