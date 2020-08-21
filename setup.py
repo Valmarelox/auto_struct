@@ -2,7 +2,7 @@ from setuptools import setup
 
 setup(
     name='auto_struct',
-    version='0.420',
+    version='0.421',
     packages=['auto_struct', 'auto_struct.data_types', 'auto_struct.data_types.int', 'auto_struct.data_types.array', 'auto_struct.data_types.string'],
     url='https://github.com/Valmarelox/auto_struct/tree/master',
     license='MIT',
