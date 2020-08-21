@@ -3,17 +3,14 @@ import json
 from struct import Struct
 from typing import get_type_hints
 
-from src.data_types.basic_type import BaseType
+from .basic_type import BaseType
 
 
 class BasicStruct(BaseType):
     # TODO: Call proper __init__ for annotation type
     def __post_init__(self):
         for (field, annotation) in self.annotations().items():
-            if issubclass(annotation, BasicStruct):
-                self.__dict__[field] = annotation(*self.__dict__[field])
-            else:
-                self.__dict__[field] = annotation(self.__dict__[field])
+            self.__dict__[field] = annotation(*self.__dict__[field])
 
     @classmethod
     def element_count(cls) -> int:
@@ -24,20 +21,24 @@ class BasicStruct(BaseType):
         return get_type_hints(cls)
 
     @classmethod
+    def element_count(cls):
+        return sum(a.element_count() for (_, a) in cls.annotations().items())
+
+    @classmethod
+    def _build_tuple_tree(cls, values):
+        assert len(values) == cls.element_count()
+        args = []
+        for (_, annotation) in cls.annotations().items():
+            args.append(annotation._build_tuple_tree(values[:annotation.element_count()]))
+            values = values[annotation.element_count():]
+        return args
+
+    @classmethod
     def parse(cls, buffer: bytes):
         s = cls._generate_struct()
         args = []
         unpacked = s.unpack(buffer)
-        print(unpacked)
-        for (_, annotation) in cls.annotations().items():
-            print(annotation)
-            if annotation.element_count() > 1:
-                args.append(tuple(unpacked[:annotation.element_count()]))
-                unpacked = unpacked[annotation.element_count():]
-            else:
-                args.append(unpacked[0])
-                unpacked = unpacked[1:]
-        print(cls, args)
+        args = cls._build_tuple_tree(unpacked)
         return cls(*args)
 
     @classmethod
@@ -52,10 +53,10 @@ class BasicStruct(BaseType):
 
     def to_json(self):
         def default_handle(x):
-            if hasattr(x, '__dict__'):
+            if hasattr(x, 'to_json'):
+                return x.to_json()
+            elif hasattr(x, '__dict__'):
                 return x.__dict__
-            elif isinstance(x, bytes):
-                return base64.b64encode(x)
             else:
                 raise TypeError('Can\'t encode {0}'.format(type(x)))
         return json.dumps(self.__dict__, default=default_handle)

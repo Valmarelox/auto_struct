@@ -5,7 +5,7 @@ class BaseType:
     FORMAT = None
 
     def __init__(self):
-        self._struct = None
+        self._basic_type_struct = None
 
     @classmethod
     def _generate_struct(self):
@@ -13,9 +13,9 @@ class BaseType:
 
     @property
     def struct(self) -> Struct:
-        if not self._struct:
-            self._struct: Struct = self._generate_struct()
-        return self._struct
+        if not self._basic_type_struct:
+            self._basic_type_struct: Struct = self._generate_struct()
+        return self._basic_type_struct
 
     @classmethod
     def format(self):
@@ -28,3 +28,8 @@ class BaseType:
     @classmethod
     def element_count(cls) -> int:
         return 1
+
+    @classmethod
+    def _build_tuple_tree(cls, values):
+        assert len(values) == 1, values
+        return values

@@ -1,6 +1,6 @@
 from typing import Sequence
 
-from src.data_types.basic_type import BaseType
+from ..basic_type import BaseType
 
 
 def Array(element: BaseType, size: int):
@@ -9,7 +9,7 @@ def Array(element: BaseType, size: int):
     class Array(BaseType):
         FORMAT = '{size}{format}'.format(size=size, format=element.format())
 
-        def __init__(self, values: Sequence[element]):
+        def __init__(self, *values: Sequence[element]):
             super().__init__()
             assert len(values) == size
             self.values = values
@@ -19,6 +19,10 @@ def Array(element: BaseType, size: int):
 
         def __setitem__(self, key: int, value: element):
             self.values[key] = value
+
+        @classmethod
+        def element_type(cls):
+            return element
 
         @classmethod
         def element_count(cls) -> int:
@@ -36,5 +40,16 @@ def Array(element: BaseType, size: int):
         def __iter__(self):
             for x in self.values:
                 yield x
+
+        def __eq__(self, other):
+            return all((x == element(y)) for (x,y) in zip(self, other))
+
+        @classmethod
+        def _build_tuple_tree(cls, values):
+            assert len(values) == cls.element_count()
+            return values
+
+        def to_json(self):
+            return self.values
 
     return Array

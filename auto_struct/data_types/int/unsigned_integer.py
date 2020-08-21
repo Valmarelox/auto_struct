@@ -1,4 +1,4 @@
-from src.data_types.int.integer import Integer
+from .integer import Integer
 
 
 class UnsignedInteger(Integer):
@@ -22,6 +22,6 @@ class uint32_t(UnsignedInteger):
     BITS = 32
 
 
-class uint64_t:
+class uint64_t(UnsignedInteger):
     FORMAT = 'Q'
     BITS = 64

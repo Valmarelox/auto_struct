@@ -9,5 +9,6 @@ setup(
     author='efi',
     author_email='valmarelox@gmail.com',
     description='Easily parse binary file in python3.8',
-    zip_safe=False
+    zip_safe=False,
+    python_requires='>=3.8'
 )

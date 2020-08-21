@@ -1,7 +1,7 @@
-from src.data_types.basic_type import BaseType
+from ..basic_type import BaseType
 
 
-class Integer(int, BaseType):
+class Integer(BaseType, int):
     BITS = 0
     SIGNED = True
     FORMAT = 'i'

@@ -1,4 +1,4 @@
-from src.data_types.basic_type import BaseType
+from ..basic_type import BaseType
 
 
 class Char(bytes, BaseType):

@@ -1,12 +1,11 @@
 from typing import Sequence
 
-from src.data_types.array import Array
-from src.data_types.string.char import Char
+from ..array import Array
+from .char import Char
 
 
 def String(size):
     class String(Array(Char, size)):
-
         @property
         def end(self):
             return self.values.index(b'\x00')

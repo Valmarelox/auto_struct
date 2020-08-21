@@ -1,7 +1,7 @@
 import uuid
 
-from src.data_types.array.array import Array
-from src.data_types.int.unsigned_integer import uint8_t
+from . import Array
+from ..int.unsigned_integer import uint8_t
 
 
 class UUID(Array(uint8_t, 16)):
