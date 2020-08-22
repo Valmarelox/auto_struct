@@ -6,7 +6,7 @@ Python 3.8 module using annotations and dataclasses for easily writing parsers f
 - No Dependencies :)
 
 ### Usage example
-See [this](examples/elf_header_parser.py)
+See [this](https://github.com/Valmarelox/auto_struct/blob/master/examples/elf_header_parser.py)
 
 ### Contribution
 Contributers are welcome!
