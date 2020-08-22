@@ -3,10 +3,22 @@ import json
 from struct import Struct
 from typing import get_type_hints
 
-from .basic_type import BaseType
+from .basic_type import BaseType, BaseTypeMeta
 
 
-class BasicStruct(BaseType):
+class BaseStructMeta(BaseTypeMeta):
+    @property
+    def struct(cls) -> Struct:
+        format = ''
+        annotations = get_type_hints(cls)
+        for (var, annotation) in annotations.items():
+            # TODO: Function to build the full struct format for unpacking
+            # TODO: use asdict/astuple to build in the end - two dicts with the same keys should have the same order
+            format += annotation.struct.format
+        return Struct(format)
+
+
+class BasicStruct(BaseType, metaclass=BaseStructMeta):
     # TODO: Call proper __init__ for annotation type
     def __post_init__(self):
         for (field, annotation) in self.annotations().items():
@@ -35,21 +47,10 @@ class BasicStruct(BaseType):
 
     @classmethod
     def parse(cls, buffer: bytes):
-        s = cls._generate_struct()
         args = []
-        unpacked = s.unpack(buffer)
+        unpacked = cls.struct.unpack(buffer)
         args = cls._build_tuple_tree(unpacked)
         return cls(*args)
-
-    @classmethod
-    def _generate_struct(cls):
-        format = ''
-        annotations = get_type_hints(cls)
-        for (var, annotation) in annotations.items():
-            # TODO: Function to build the full struct format for unpacking
-            # TODO: use asdict/astuple to build in the end - two dicts with the same keys should have the same order
-            format += annotation.format()
-        return Struct(format)
 
     def to_json(self):
         def default_handle(x):

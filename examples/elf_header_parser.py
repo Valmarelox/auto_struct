@@ -11,10 +11,17 @@ class ElfMagic(Array(uint8_t, 4)):
         return repr(''.join(map(chr, self)))
 
 
+class EIClass(BaseEnum):
+    __ELEMENT_TYPE__ = uint8_t
+    ELFCLASSNONE = 0
+    ELFCLASS32 = 1
+    ELFCLASS64 = 2
+
+
 @dataclass
 class ElfIdent(BasicStruct):
     ei_magic: ElfMagic
-    ei_class: uint8_t
+    ei_class: EIClass
     ei_data: uint8_t
     ei_version: uint8_t
     ei_osabi: uint8_t
@@ -41,7 +48,6 @@ class Elf64Header(BasicStruct):
 
 
 with open('/bin/ls', 'rb') as f:
-    size = Elf64Header._generate_struct().size
-    e = (Elf64Header.parse(f.read(size)))
+    e = (Elf64Header.parse(f.read(Elf64Header.struct.size)))
     print(e)
     print(e.to_json())
