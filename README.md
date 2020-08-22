@@ -3,6 +3,7 @@ Python 3.8 module using annotations and dataclasses for easily writing parsers f
 - Parse packed binary data using declarative forms
 - Easily validate parsed data
 - Easily nest structs
+- No Dependencies :)
 
 ### Usage example
 See [this](examples/elf_header_parser.py)
@@ -15,4 +16,6 @@ Contributers are welcome!
 - Documentation
 - More examples
 - Tests
+- Enums
+  - Bit flags types
 - Dynamic sized structs (e.g. `struct a{ int len; char data[] };`)
