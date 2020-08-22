@@ -10,14 +10,16 @@ class BaseEnumMeta(BaseTypeMeta):
     def __new__(metacls, cls: str, bases: Sequence[type], classdict: Dict[str, Any]):
 
         ELEMENT_TYPE = '__ELEMENT_TYPE__'
+        element_type = None
         if ELEMENT_TYPE in classdict:
             element_type = classdict[ELEMENT_TYPE]
         else:
             for base in bases:
                 if hasattr(base, ELEMENT_TYPE):
                     element_type = base.__ELEMENT_TYPE__
+                    break
             else:
-                raise TypeError()
+                raise TypeError('__ELEMENT_TYPE__ Not defined for class {0}'.format(cls))
 
         values = {}
         for key in classdict.copy():
@@ -40,8 +42,11 @@ class BaseEnum(BaseType, metaclass=BaseEnumMeta):
     __ELEMENT_TYPE__ = type(None)
 
     def __init__(self, value):
-        assert value in self.__VALUES__.values(), value
         self._value = self.__ELEMENT_TYPE__(value)
+        self.__verify()
+
+    def __verify(self):
+        assert self._value in self.__VALUES__.values(), self._value
 
     def __repr__(self):
         for (key, value) in self.__VALUES__.items():
@@ -60,5 +65,9 @@ class BaseEnum(BaseType, metaclass=BaseEnumMeta):
     def __bool__(self):
         return bool(self._value)
 
+    def __eq__(self, other):
+        return type(self) == type(other) and self._value == other._value
+
     def to_json(self):
         return self._value
+
