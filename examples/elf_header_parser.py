@@ -50,4 +50,5 @@ class Elf64Header(BasicStruct):
 with open('/bin/ls', 'rb') as f:
     e = (Elf64Header.parse(f.read(Elf64Header.struct.size)))
     print(e)
+    print(e.e_ident)
     print(e.to_json())
