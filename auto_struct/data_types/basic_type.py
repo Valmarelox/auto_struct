@@ -11,16 +11,15 @@ class BaseTypeMeta(type):
             return Struct(cls.FORMAT)
         return None
 
+    def __len__(self):
+        return self.struct.size
+
 
 class BaseType(metaclass=BaseTypeMeta):
     @classmethod
     def parse(cls, data: bytes):
-        assert cls.struct.size == len(data)
+        assert len(cls) == len(data)
         return cls(*cls.struct.unpack(data))
-
-    @property
-    def __len__(self):
-        return self.struct.size
 
     @classmethod
     def element_count(cls) -> int:

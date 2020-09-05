@@ -60,4 +60,5 @@ class BasicStruct(BaseType, metaclass=BaseStructMeta):
                 return x.__dict__
             else:
                 raise TypeError('Can\'t encode {0}'.format(type(x)))
+
         return json.dumps(self.__dict__, default=default_handle)

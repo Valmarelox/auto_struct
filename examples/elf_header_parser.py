@@ -3,8 +3,6 @@ from mmap import mmap, ACCESS_READ
 from auto_struct import *
 from dataclasses import dataclass
 
-from auto_struct.data_types.enums.bitflags import BitFlag
-
 
 class ElfMagic(Array(uint8_t, 4)):
     def __init__(self, *values):
@@ -203,7 +201,7 @@ class ElfFile(mmap):
 
     @property
     def header(self):
-        return Elf64Header.parse(self[:Elf64Header.struct.size])
+        return Elf64Header.parse(self[:len(Elf64Header)])
 
     @property
     def sections(self):
@@ -213,13 +211,16 @@ class ElfFile(mmap):
     def phdrs(self):
         yield from (self._phdr(i) for i in range(self.header.e_phnum))
 
+    def _read_object(self, offset, t):
+        return t.parse(self[offset: offset + len(t)])
+
     def _section(self, idx, cls=Section):
-        start = self.header.e_shoff + idx * Elf64SectionHeader.struct.size
-        return cls(self, Elf64SectionHeader.parse(self[start: start + Elf64SectionHeader.struct.size]))
+        start = self.header.e_shoff + idx * len(Elf64SectionHeader)
+        return cls(self, self._read_object(start, Elf64SectionHeader))
 
     def _phdr(self, idx):
-        start = self.header.e_phoff + idx * Elf64Phdr.struct.size
-        return Elf64Phdr.parse(self[start: start + Elf64Phdr.struct.size])
+        start = self.header.e_phoff + idx * len(Elf64Phdr)
+        return self._read_object(start, Elf64Phdr)
 
     @property
     def shstrtab(self):
