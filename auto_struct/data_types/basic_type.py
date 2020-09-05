@@ -26,6 +26,6 @@ class BaseType(metaclass=BaseTypeMeta):
         return 1
 
     @classmethod
-    def _build_tuple_tree(cls, values):
+    def build_tuple_tree(cls, values):
         assert len(values) == 1, values
         return values

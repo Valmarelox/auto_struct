@@ -1,5 +1,3 @@
-from typing import Sequence
-
 from ..array import Array
 from .char import Char
 

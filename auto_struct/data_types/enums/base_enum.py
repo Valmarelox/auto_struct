@@ -7,15 +7,13 @@ from auto_struct.data_types.basic_type import BaseTypeMeta, BaseType
 
 class BaseEnumMeta(BaseTypeMeta):
 
-    def __new__(metacls, cls: str, bases: Sequence[type], classdict: Dict[str, Any]):
-
-        ELEMENT_TYPE = '__ELEMENT_TYPE__'
-        element_type = None
-        if ELEMENT_TYPE in classdict:
-            element_type = classdict[ELEMENT_TYPE]
+    def __new__(mcs, cls: str, bases: Sequence[type], classdict: Dict[str, Any]):
+        element_type_name = '__ELEMENT_TYPE__'
+        if element_type_name in classdict:
+            element_type = classdict[element_type_name]
         else:
             for base in bases:
-                if hasattr(base, ELEMENT_TYPE):
+                if hasattr(base, element_type_name):
                     element_type = base.__ELEMENT_TYPE__
                     break
             else:
@@ -27,7 +25,7 @@ class BaseEnumMeta(BaseTypeMeta):
                 values[key] = element_type(classdict[key])
         classdict['__VALUES__'] = values
 
-        cls = super().__new__(metacls, cls, bases, classdict)
+        cls = super().__new__(mcs, cls, bases, classdict)
 
         for item in values:
             setattr(cls, item, cls(cls.__dict__[item]))
@@ -42,32 +40,32 @@ class BaseEnum(BaseType, metaclass=BaseEnumMeta):
     __ELEMENT_TYPE__ = type(None)
 
     def __init__(self, value):
-        self._value = self.__ELEMENT_TYPE__(value)
+        self.value = self.__ELEMENT_TYPE__(value)
         self.verify()
 
     def verify(self):
-        assert self._value in self.__VALUES__.values(), '{} {}'.format(self._value, self.__VALUES__)
+        assert self.value in self.__VALUES__.values(), '{} {}'.format(self.value, self.__VALUES__)
 
     def __repr__(self):
         for (key, value) in self.__VALUES__.items():
-            if self._value == value:
+            if self.value == value:
                 return '{0}.{1}'.format(type(self).__name__, key)
 
     def __int__(self):
-        return int(self._value)
+        return int(self.value)
 
     def __str__(self):
-        return str(self._value)
+        return str(self.value)
 
     def __bytes__(self):
-        return bytes(self._value)
+        return bytes(self.value)
 
     def __bool__(self):
-        return bool(self._value)
+        return bool(self.value)
 
     def __eq__(self, other):
-        return type(self) == type(other) and self._value == other._value
+        return type(self) == type(other) and self.value == other.value
 
     def to_json(self):
-        return self._value
+        return self.value
 

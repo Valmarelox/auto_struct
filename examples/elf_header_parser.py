@@ -111,7 +111,7 @@ class Elf64SectionHeader(BasicStruct):
 
 
 class Section:
-    def __init__(self, e: Elf64Header, shdr: Elf64SectionHeader):
+    def __init__(self, e, shdr: Elf64SectionHeader):
         self.e = e
         self.shdr = shdr
 

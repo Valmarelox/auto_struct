@@ -1,9 +1,9 @@
-from typing import Sequence
+from typing import Sequence, Type
 
 from ..basic_type import BaseType
 
 
-def Array(element: BaseType, size: int):
+def Array(element: Type[BaseType], size: int):
     assert isinstance(size, int) and size > 0
 
     class Array(BaseType):
@@ -18,7 +18,7 @@ def Array(element: BaseType, size: int):
             return self.values[item]
 
         def __setitem__(self, key: int, value: element):
-            self.values[key] = value
+            self.values = self.values[:key] + value + self.values[key + 1:]
 
         @classmethod
         def element_type(cls):
@@ -42,10 +42,10 @@ def Array(element: BaseType, size: int):
                 yield x
 
         def __eq__(self, other):
-            return all((x == element(y)) for (x,y) in zip(self, other))
+            return all((x == element(y)) for (x, y) in zip(self, other))
 
         @classmethod
-        def _build_tuple_tree(cls, values):
+        def build_tuple_tree(cls, values):
             assert len(values) == cls.element_count()
             return values
 

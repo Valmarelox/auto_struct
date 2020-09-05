@@ -7,14 +7,15 @@ class Integer(BaseType, int):
     FORMAT = 'i'
 
     def __init__(self, value):
-        LOWER_BOUND = -(1 << (self.BITS - 1)) if self.SIGNED else 0
-        UPPER_BOUND = (1 << (self.BITS - 1)) if self.SIGNED else (1 << self.BITS)
-        assert LOWER_BOUND <= value < UPPER_BOUND
-        self = value
+        super().__init__()
+        lower_bound = -(1 << (self.BITS - 1)) if self.SIGNED else 0
+        upper_bound = (1 << (self.BITS - 1)) if self.SIGNED else (1 << self.BITS)
+        assert lower_bound <= value < upper_bound
 
     # Sign extended operations
     def __invert__(self):
         return super().__invert__() & ((1 << self.BITS) - 1)
+
 
 class int8_t(Integer):
     BITS = 8
