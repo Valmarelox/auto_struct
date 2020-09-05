@@ -12,6 +12,9 @@ class Integer(BaseType, int):
         assert LOWER_BOUND <= value < UPPER_BOUND
         self = value
 
+    # Sign extended operations
+    def __invert__(self):
+        return super().__invert__() & ((1 << self.BITS) - 1)
 
 class int8_t(Integer):
     BITS = 8

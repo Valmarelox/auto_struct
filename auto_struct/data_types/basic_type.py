@@ -1,29 +1,25 @@
 from struct import Struct
+from typing import Optional
 
 
-class BaseType:
+class BaseTypeMeta(type):
     FORMAT = None
 
-    def __init__(self):
-        self._basic_type_struct = None
-
-    @classmethod
-    def _generate_struct(self):
-        return Struct(self.FORMAT)
-
     @property
-    def struct(self) -> Struct:
-        if not self._basic_type_struct:
-            self._basic_type_struct: Struct = self._generate_struct()
-        return self._basic_type_struct
+    def struct(cls) -> Optional[Struct]:
+        if cls.FORMAT:
+            return Struct(cls.FORMAT)
+        return None
 
-    @classmethod
-    def format(self):
-        return self._generate_struct().format
-
-    @property
     def __len__(self):
         return self.struct.size
+
+
+class BaseType(metaclass=BaseTypeMeta):
+    @classmethod
+    def parse(cls, data: bytes):
+        assert len(cls) == len(data)
+        return cls(*cls.struct.unpack(data))
 
     @classmethod
     def element_count(cls) -> int:
