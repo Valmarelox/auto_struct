@@ -19,7 +19,18 @@ class BaseStructMeta(BaseTypeMeta):
 
 
 class BasicStruct(BaseType, metaclass=BaseStructMeta):
-    # TODO: Call proper __init__ for annotation type
+    """
+    Basic struct type to be used with dataclasses
+    e.g
+
+    @dataclass
+    class Message(BasicStruct):
+        type: uint32_t
+        data: Array(uint8_t, 128)
+
+    print(Message(1, [0] * 128))
+    print(Message.parse('\x01' + '\x00' * 128))
+    """
     def __post_init__(self):
         for (field, annotation) in self.annotations().items():
             self.__dict__[field] = annotation(*self.__dict__[field])

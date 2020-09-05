@@ -5,9 +5,9 @@ with open('README.md', 'rt') as f:
 
 setup(
     name='auto_struct',
-    version='0.422',
+    version='0.450',
     packages=['auto_struct', 'auto_struct.data_types', 'auto_struct.data_types.int', 'auto_struct.data_types.array',
-              'auto_struct.data_types.string', 'auto_struct.data_types.enum'],
+              'auto_struct.data_types.string', 'auto_struct.data_types.enums'],
     url='https://github.com/Valmarelox/auto_struct/tree/master',
     license='MIT',
     author='efi',

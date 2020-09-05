@@ -12,10 +12,8 @@ See [this](https://github.com/Valmarelox/auto_struct/blob/master/examples/elf_he
 Contributers are welcome!
 
 ### TODO:
-- Method documentation
-- Documentation
+- Method documentation (WIP)
+- Documentation (WIP)
 - More examples
 - Tests
-- Enums
-  - Bit flags types
 - Dynamic sized structs (e.g. `struct a{ int len; char data[] };`)
