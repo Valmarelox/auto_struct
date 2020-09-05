@@ -43,10 +43,10 @@ class BaseEnum(BaseType, metaclass=BaseEnumMeta):
 
     def __init__(self, value):
         self._value = self.__ELEMENT_TYPE__(value)
-        self.__verify()
+        self.verify()
 
-    def __verify(self):
-        assert self._value in self.__VALUES__.values(), self._value
+    def verify(self):
+        assert self._value in self.__VALUES__.values(), '{} {}'.format(self._value, self.__VALUES__)
 
     def __repr__(self):
         for (key, value) in self.__VALUES__.items():
