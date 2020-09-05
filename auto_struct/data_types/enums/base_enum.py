@@ -17,7 +17,7 @@ class BaseEnumMeta(BaseTypeMeta):
                     element_type = base.__ELEMENT_TYPE__
                     break
             else:
-                raise TypeError('__ELEMENT_TYPE__ Not defined for class {0}'.format(cls))
+                raise TypeError(f'__ELEMENT_TYPE__ Not defined for class {cls}')
 
         values = {}
         for key in classdict.copy():
@@ -44,12 +44,12 @@ class BaseEnum(BaseType, metaclass=BaseEnumMeta):
         self.verify()
 
     def verify(self) -> bool:
-        assert self.value in self.__VALUES__.values(), '{} {}'.format(self.value, self.__VALUES__)
+        assert self.value in self.__VALUES__.values(), f'{self.value} {self.__VALUES__}'
 
     def __repr__(self):
         for (key, value) in self.__VALUES__.items():
             if self.value == value:
-                return '{0}.{1}'.format(type(self).__name__, key)
+                return f'{type(self).__name__}.{key}'
 
     def __int__(self):
         return int(self.value)
@@ -69,3 +69,5 @@ class BaseEnum(BaseType, metaclass=BaseEnumMeta):
     def to_json(self):
         return self.value
 
+    def __hash__(self):
+        return hash(self.value)

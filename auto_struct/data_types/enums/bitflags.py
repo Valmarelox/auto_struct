@@ -6,8 +6,7 @@ class BitFlagMeta(BaseEnumMeta):
     def __new__(mcs, *args, **kwargs):
         cls = super().__new__(mcs, *args, **kwargs)
         if not issubclass(cls.__ELEMENT_TYPE__, UnsignedInteger):
-            raise TypeError('BitFlag can only use UnsignedInteger types as __ELEMENT_TYPE__ (got: {0})'.format(
-                cls.__ELEMENT_TYPE__))
+            raise TypeError(f'BitFlag can only use UnsignedInteger types as __ELEMENT_TYPE__ (got: {cls.__ELEMENT_TYPE__})')
         cls.__BITS__ = {item[1]: item[0] for item in cls.__VALUES__.items()}
         return cls
 
@@ -36,4 +35,4 @@ class BitFlag(BaseEnum, metaclass=BitFlagMeta):
                 yield bit
 
     def __repr__(self):
-        return '({0})'.format('|'.join(self.__BITS__[bit] for bit in self))
+        return f'({"|".join(self.__BITS__[bit] for bit in self)})'

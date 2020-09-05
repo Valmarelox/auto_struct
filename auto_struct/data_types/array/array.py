@@ -7,7 +7,7 @@ def Array(element: Type[BaseType], size: int):
     assert isinstance(size, int) and size > 0
 
     class Array(BaseType):
-        FORMAT = '{size}{format}'.format(size=size, format=element.struct.format)
+        FORMAT = f'{size}{element.struct.format}'
 
         def __init__(self, *values: Sequence[element]):
             super().__init__()

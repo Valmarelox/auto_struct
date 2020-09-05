@@ -9,4 +9,4 @@ class UUID(Array(uint8_t, 16)):
         return str(uuid.UUID(bytes=bytes(self)))
 
     def __repr__(self):
-        return "'{0}'".format(str(self))
+        return f"'{str(self)}'"

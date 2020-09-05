@@ -64,6 +64,6 @@ class BasicStruct(BaseType, metaclass=BaseStructMeta):
             elif hasattr(x, '__dict__'):
                 return x.__dict__
             else:
-                raise TypeError('Can\'t encode {0}'.format(type(x)))
+                raise TypeError(f'Can\'t encode {type(x)}')
 
         return json.dumps(self.__dict__, default=default_handle)

@@ -15,6 +15,6 @@ def String(size):
             return str(bytes(self), 'ascii')
 
         def __repr__(self):
-            return "'{0}'".format(str(self))
+            return f"'{str(self)}'"
 
     return String
