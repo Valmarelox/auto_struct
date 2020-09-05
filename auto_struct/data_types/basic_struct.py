@@ -1,7 +1,6 @@
-import base64
 import json
 from struct import Struct
-from typing import get_type_hints
+from typing import get_type_hints, Sequence, Any, Type, Dict
 
 from .basic_type import BaseType, BaseTypeMeta
 
@@ -36,15 +35,15 @@ class BasicStruct(BaseType, metaclass=BaseStructMeta):
             self.__dict__[field] = annotation(*self.__dict__[field])
 
     @classmethod
-    def annotations(cls):
+    def annotations(cls) -> Dict[str, Type]:
         return get_type_hints(cls)
 
     @classmethod
-    def element_count(cls):
+    def element_count(cls) -> int:
         return sum(a.element_count() for (_, a) in cls.annotations().items())
 
     @classmethod
-    def build_tuple_tree(cls, values):
+    def build_tuple_tree(cls, values: Sequence[Any]) -> Sequence[Any]:
         assert len(values) == cls.element_count()
         args = []
         for (_, annotation) in cls.annotations().items():
@@ -53,12 +52,12 @@ class BasicStruct(BaseType, metaclass=BaseStructMeta):
         return args
 
     @classmethod
-    def parse(cls, buffer: bytes):
+    def parse(cls, buffer: bytes) -> 'BasicStruct':
         unpacked = cls.struct.unpack(buffer)
         args = cls.build_tuple_tree(unpacked)
         return cls(*args)
 
-    def to_json(self):
+    def to_json(self) -> str:
         def default_handle(x):
             if hasattr(x, 'to_json'):
                 return x.to_json()

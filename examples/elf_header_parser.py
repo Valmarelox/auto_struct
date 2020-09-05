@@ -181,19 +181,6 @@ class Elf64Phdr(BasicStruct):
     p_align: uint64_t
 
 
-def builder(name: bytes) -> type:
-    return {
-        b'.strtab': name,
-        b'.text': Text,
-        b'.interp': StringSection,
-        b'.comment': StringSection,
-        b'.bss': NoBitsSection,
-        b'.init_array': ArraySection,
-        b'.fini_array': ArraySection
-
-    }[name]
-
-
 class ElfFile(mmap):
     def __new__(cls, filename):
         fd = open(filename, 'rb')
@@ -230,8 +217,7 @@ class ElfFile(mmap):
 with ElfFile('/bin/ls') as f:
     print(f.header)
     for section in f.sections:
-        print(section.shdr)
-        print(section.name)
+        print(section.name, section.shdr)
 
     for i, phdr in enumerate(f.phdrs):
         print(i, phdr)

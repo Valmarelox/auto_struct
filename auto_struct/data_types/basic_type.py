@@ -1,5 +1,5 @@
 from struct import Struct
-from typing import Optional
+from typing import Optional, Sequence, Any
 
 
 class BaseTypeMeta(type):
@@ -11,7 +11,7 @@ class BaseTypeMeta(type):
             return Struct(cls.FORMAT)
         return None
 
-    def __len__(self):
+    def __len__(self) -> int:
         return self.struct.size
 
 
@@ -26,6 +26,6 @@ class BaseType(metaclass=BaseTypeMeta):
         return 1
 
     @classmethod
-    def build_tuple_tree(cls, values):
+    def build_tuple_tree(cls, values) -> Sequence[Any]:
         assert len(values) == 1, values
         return values

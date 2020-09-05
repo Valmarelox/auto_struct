@@ -1,4 +1,4 @@
-from typing import Sequence, Type
+from typing import Sequence, Type, Any
 
 from ..basic_type import BaseType
 
@@ -21,7 +21,7 @@ def Array(element: Type[BaseType], size: int):
             self.values = self.values[:key] + value + self.values[key + 1:]
 
         @classmethod
-        def element_type(cls):
+        def element_type(cls) -> Type[BaseType]:
             return element
 
         @classmethod
@@ -45,7 +45,7 @@ def Array(element: Type[BaseType], size: int):
             return all((x == element(y)) for (x, y) in zip(self, other))
 
         @classmethod
-        def build_tuple_tree(cls, values):
+        def build_tuple_tree(cls, values) -> Sequence[Any]:
             assert len(values) == cls.element_count()
             return values
 
