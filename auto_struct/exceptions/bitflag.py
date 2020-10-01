@@ -1,0 +1,2 @@
+class BitNotDefined(ValueError):
+    pass

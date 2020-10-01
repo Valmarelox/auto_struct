@@ -1,5 +1,6 @@
 from .base_enum import BaseEnum, BaseEnumMeta
 from ..int.unsigned_integer import UnsignedInteger, uint32_t
+from ...exceptions.bitflag import BitNotDefined
 
 
 class BitFlagMeta(BaseEnumMeta):
@@ -10,15 +11,12 @@ class BitFlagMeta(BaseEnumMeta):
         cls.__BITS__ = {item[1]: item[0] for item in cls.__VALUES__.items()}
         return cls
 
-
 class BitFlag(BaseEnum, metaclass=BitFlagMeta):
     __ELEMENT_TYPE__ = uint32_t
 
-    def __init__(self, value):
-        super().__init__(value)
-
     def verify(self):
-        assert all(x in self.__VALUES__.values() for x in self)
+        if not all(x in self.__VALUES__.values() for x in self):
+            raise BitNotDefined(f'{hex(int(self))} contains bits not defined in {type(self).__name__}')
 
     def __or__(self, other):
         return BitFlag(self.__ELEMENT_TYPE__(self) | self.__ELEMENT_TYPE__(other))

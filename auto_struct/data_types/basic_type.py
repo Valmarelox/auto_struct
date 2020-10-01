@@ -1,6 +1,12 @@
 from struct import Struct
 from typing import Optional, Sequence, Any
 
+from auto_struct.exceptions.type import ElementCountException
+
+
+def create_struct(fmt: str) -> Struct:
+    return Struct('=' + fmt.replace('=', ''))
+
 
 class BaseTypeMeta(type):
     FORMAT = None
@@ -8,7 +14,7 @@ class BaseTypeMeta(type):
     @property
     def struct(cls) -> Optional[Struct]:
         if cls.FORMAT:
-            return Struct(cls.FORMAT)
+            return create_struct(cls.FORMAT)
         return None
 
     def __len__(self) -> int:
@@ -18,7 +24,8 @@ class BaseTypeMeta(type):
 class BaseType(metaclass=BaseTypeMeta):
     @classmethod
     def parse(cls, data: bytes):
-        assert len(cls) == len(data)
+        if len(cls) != len(data):
+            raise ElementCountException(f'{cls.__name__} received {len(data)} elements, expected: {len(cls)}')
         return cls(*cls.struct.unpack(data))
 
     @classmethod
@@ -26,6 +33,11 @@ class BaseType(metaclass=BaseTypeMeta):
         return 1
 
     @classmethod
+    def _rec_element_count(cls):
+        return cls.element_count()
+
+    @classmethod
     def build_tuple_tree(cls, values) -> Sequence[Any]:
-        assert len(values) == 1, values
+        if len(values) != 1:
+            raise ElementCountException(f'{cls.__name__} received {len(values)} elements, expected: 1')
         return values

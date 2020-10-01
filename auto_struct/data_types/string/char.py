@@ -1,9 +1,11 @@
 from ..basic_type import BaseType
+from ...exceptions.type import ElementCountException
 
 
 class Char(bytes, BaseType):
     FORMAT = 'c'
 
     def __init__(self, value: bytes):
-        assert len(value) == 1
+        if len(value) != 1:
+            raise ElementCountException(f'value has invalid length: {len(value)}, expected: 1')
         super().__init__(value)

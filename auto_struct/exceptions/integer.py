@@ -1,0 +1,2 @@
+class IntegerOutOfBounds(ValueError):
+    pass

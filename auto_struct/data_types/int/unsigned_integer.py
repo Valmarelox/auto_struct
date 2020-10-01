@@ -8,20 +8,20 @@ class UnsignedInteger(Integer):
 
 
 class uint8_t(UnsignedInteger):
-    FORMAT = 'B'
     BITS = 8
+    FORMAT = 'B'
 
 
 class uint16_t(UnsignedInteger):
-    FORMAT = 'H'
     BITS = 16
+    FORMAT = 'H'
 
 
 class uint32_t(UnsignedInteger):
-    FORMAT = 'I'
     BITS = 32
+    FORMAT = 'I'
 
 
 class uint64_t(UnsignedInteger):
-    FORMAT = 'Q'
     BITS = 64
+    FORMAT = 'Q'

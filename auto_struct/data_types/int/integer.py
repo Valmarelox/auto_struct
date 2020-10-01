@@ -1,4 +1,5 @@
 from ..basic_type import BaseType
+from ...exceptions.integer import IntegerOutOfBounds
 
 
 class Integer(BaseType, int):
@@ -10,7 +11,8 @@ class Integer(BaseType, int):
         super().__init__()
         lower_bound = -(1 << (self.BITS - 1)) if self.SIGNED else 0
         upper_bound = (1 << (self.BITS - 1)) if self.SIGNED else (1 << self.BITS)
-        assert lower_bound <= value < upper_bound
+        if not (lower_bound <= value < upper_bound):
+            raise IntegerOutOfBounds(f'Integer {value} is out of the range {lower_bound}-{upper_bound}')
 
     # Sign extended operations
     def __invert__(self):

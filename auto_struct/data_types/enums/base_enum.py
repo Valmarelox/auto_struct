@@ -3,6 +3,7 @@ from types import FunctionType
 from typing import Optional, Sequence, Any, Dict
 
 from auto_struct.data_types.basic_type import BaseTypeMeta, BaseType
+from auto_struct.exceptions.enum import NoSuchEnumElement
 
 
 class BaseEnumMeta(BaseTypeMeta):
@@ -44,7 +45,8 @@ class BaseEnum(BaseType, metaclass=BaseEnumMeta):
         self.verify()
 
     def verify(self) -> bool:
-        assert self.value in self.__VALUES__.values(), f'{self.value} {self.__VALUES__}'
+        if self.value not in self.__VALUES__.values():
+            raise NoSuchEnumElement(f'Value {self.value} not in enum {type(self).__name__}')
 
     def __repr__(self):
         for (key, value) in self.__VALUES__.items():
@@ -64,7 +66,7 @@ class BaseEnum(BaseType, metaclass=BaseEnumMeta):
         return bool(self.value)
 
     def __eq__(self, other):
-        return type(self) == type(other) and self.value == other.value
+        return type(self) is type(other) and self.value == other.value
 
     def to_json(self):
         return self.value
