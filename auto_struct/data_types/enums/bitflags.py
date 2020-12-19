@@ -12,11 +12,20 @@ class BitFlagMeta(BaseEnumMeta):
         return cls
 
 class BitFlag(BaseEnum, metaclass=BitFlagMeta):
-    __ELEMENT_TYPE__ = uint32_t
+    """
+        Bitflag field with default size == sizeof(uint32_t)
 
-    def verify(self):
-        if not all(x in self.__VALUES__.values() for x in self):
-            raise BitNotDefined(f'{hex(int(self))} contains bits not defined in {type(self).__name__}')
+        Example:
+        class RWX(BitFlag):
+            __ELEMENT_TYPE__ = uint8_t
+            X = (1 << 0)
+            W = (1 << 1)
+            R = (1 << 2)
+
+        print(RWX(3)) # Result: (X|W)
+    """
+
+    __ELEMENT_TYPE__ = uint32_t
 
     def __or__(self, other):
         return BitFlag(self.__ELEMENT_TYPE__(self) | self.__ELEMENT_TYPE__(other))
@@ -34,3 +43,7 @@ class BitFlag(BaseEnum, metaclass=BitFlagMeta):
 
     def __repr__(self):
         return f'({"|".join(self.__BITS__[bit] for bit in self)})'
+
+    def verify(self):
+        if not all(x in self.__VALUES__.values() for x in self):
+            raise BitNotDefined(f'{hex(int(self))} contains bits not defined in {type(self).__name__}')

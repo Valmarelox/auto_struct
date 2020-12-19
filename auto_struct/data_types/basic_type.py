@@ -22,6 +22,9 @@ class BaseTypeMeta(type):
 
 
 class BaseType(metaclass=BaseTypeMeta):
+    """
+        BasicType the entire module inherits, allows automatic packing and unpacking of datatypes
+    """
     @classmethod
     def parse(cls, data: bytes):
         if len(cls) != len(data):
