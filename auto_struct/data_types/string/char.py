@@ -3,6 +3,9 @@ from ...exceptions.type import ElementCountException
 
 
 class Char(bytes, BaseType):
+    """
+        8-bit ASCII character
+    """
     FORMAT = 'c'
 
     def __init__(self, value: bytes):
