@@ -1,13 +1,13 @@
-from setuptools import setup
+from setuptools import setup, find_packages
+import pathlib
 
 with open('README.md', 'rt') as f:
     long_description = f.read()
 
 setup(
     name='auto_struct',
-    version='0.451',
-    packages=['auto_struct', 'auto_struct.data_types', 'auto_struct.data_types.int', 'auto_struct.data_types.array',
-              'auto_struct.data_types.string', 'auto_struct.data_types.enums'],
+    version='0.460',
+    packages=find_packages(),
     url='https://github.com/Valmarelox/auto_struct/tree/master',
     license='MIT',
     author='efi',
