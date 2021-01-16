@@ -1,8 +1,8 @@
-from ..basic_type import BaseType
+from ..basic_type import BaseSingleValueType
 from ...exceptions.integer import IntegerOutOfBounds
 
 
-class Integer(BaseType, int):
+class Integer(BaseSingleValueType):
     """
         Basic Integer type, should not be used directly
     """
@@ -11,11 +11,12 @@ class Integer(BaseType, int):
     FORMAT = 'i'
 
     def __init__(self, value):
-        super().__init__()
+        value = int(value)
         lower_bound = -(1 << (self.BITS - 1)) if self.SIGNED else 0
         upper_bound = (1 << (self.BITS - 1)) if self.SIGNED else (1 << self.BITS)
         if not (lower_bound <= value < upper_bound):
             raise IntegerOutOfBounds(f'Integer {value} is out of the range {lower_bound}-{upper_bound}')
+        super().__init__(value)
 
     # Sign extended operations
     def __invert__(self):
@@ -23,6 +24,39 @@ class Integer(BaseType, int):
             Invert the bits of the integer (dependson the bitsize)
         """
         return super().__invert__() & ((1 << self.BITS) - 1)
+
+    def __hash__(self):
+        return super().__hash__()
+
+    def __eq__(self, other):
+        return int(self) == int(other)
+
+    def __int__(self):
+        return self.value
+
+    def __index__(self):
+        return self.value
+
+    def __add__(self, other):
+        return type(self)(int(self) + int(other))
+
+    def __mul__(self, other):
+        return type(self)(int(self) * int(other))
+
+    def __and__(self, other):
+        return type(self)(int(self).__and__(int(other)))
+
+    def __or__(self, other):
+        return type(self)(int(self).__or__(int(other)))
+
+    def __repr__(self):
+        return repr(int(self))
+
+    def __bool__(self):
+        return bool(int(self))
+
+    def __lt__(self, other):
+        return int(self) < int(other)
 
 
 class int8_t(Integer):

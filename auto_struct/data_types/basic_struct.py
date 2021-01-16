@@ -4,7 +4,7 @@ from struct import Struct
 from typing import get_type_hints, Sequence, Any, Type, Dict, Union
 
 from .basic_type import BaseType, BaseTypeMeta, create_struct
-from ..exceptions.type import TypeJSONEncodeException, ElementCountException
+from ..exceptions import StructSubParseException, TypeJSONEncodeException, ElementCountException
 
 
 class BaseStructMeta(BaseTypeMeta):
@@ -34,7 +34,10 @@ class BasicStruct(BaseType, metaclass=BaseStructMeta):
     """
     def __post_init__(self):
         for (field, annotation) in self.annotations().items():
-            self.__dict__[field] = annotation(*self.__dict__[field])
+            try:
+                self.__dict__[field] = annotation(*self.__dict__[field])
+            except Exception as e:
+                raise StructSubParseException(f'Error when initializing struct field "{field}" of type "{annotation}" with data "{self.__dict__[field]}"')
 
     @classmethod
     def annotations(cls) -> Dict[str, Type]:
@@ -53,9 +56,12 @@ class BasicStruct(BaseType, metaclass=BaseStructMeta):
         if len(values) != cls._rec_element_count():
              raise ElementCountException(f'build_tuple_tee received {len(values)} elements, expected: {cls._rec_element_count()}')
         args = []
-        for (_, annotation) in cls.annotations().items():
-            args.append(annotation.build_tuple_tree(values[:annotation._rec_element_count()]))
-            values = values[annotation._rec_element_count():]
+        for (name, annotation) in cls.annotations().items():
+            try:
+                args.append(annotation.build_tuple_tree(values[:annotation._rec_element_count()]))
+                values = values[annotation._rec_element_count():]
+            except Exception as e:
+                raise StructSubParseException(f'Exception raised when trying to parse {name}')
         return args
 
     @classmethod

@@ -6,7 +6,7 @@ with open('README.md', 'rt') as f:
 
 setup(
     name='auto_struct',
-    version='0.500',
+    version='0.600',
     packages=find_packages(),
     url='https://github.com/Valmarelox/auto_struct/tree/master',
     license='MIT',

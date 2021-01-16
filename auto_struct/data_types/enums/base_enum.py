@@ -9,12 +9,10 @@ from auto_struct.exceptions.enum import NoSuchEnumElement
 class BaseEnumMeta(BaseTypeMeta):
 
     def __new__(mcs, cls: str, bases: Sequence[type], classdict: Dict[str, Any]):
-        element_type_name = '__ELEMENT_TYPE__'
-        if element_type_name in classdict:
-            element_type = classdict[element_type_name]
-        else:
+        element_type = classdict.get('__ELEMENT_TYPE__', None)
+        if not element_type:
             for base in bases:
-                if hasattr(base, element_type_name):
+                if hasattr(base, '__ELEMENT_TYPE__'):
                     element_type = base.__ELEMENT_TYPE__
                     break
             else:
@@ -41,6 +39,7 @@ class BaseEnum(BaseType, metaclass=BaseEnumMeta):
     __ELEMENT_TYPE__ = type(None)
 
     def __init__(self, value):
+        # TODO: IS this this?
         self.value = self.__ELEMENT_TYPE__(value)
         self.verify()
 

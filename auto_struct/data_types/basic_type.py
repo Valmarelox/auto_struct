@@ -25,6 +25,7 @@ class BaseType(metaclass=BaseTypeMeta):
     """
         BasicType the entire module inherits, allows automatic packing and unpacking of datatypes
     """
+
     @classmethod
     def parse(cls, data: bytes):
         if len(cls) != len(data):
@@ -44,3 +45,12 @@ class BaseType(metaclass=BaseTypeMeta):
         if len(values) != 1:
             raise ElementCountException(f'{cls.__name__} received {len(values)} elements, expected: 1')
         return values
+
+    def __hash__(self):
+        return hash(self._rec_element_count()) + hash(type(self))
+
+
+class BaseSingleValueType(BaseType):
+    def __init__(self, value):
+        super().__init__()
+        self.value = value
