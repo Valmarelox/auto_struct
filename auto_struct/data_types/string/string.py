@@ -2,6 +2,7 @@ from ..array import Array
 from .char import Char
 
 
+# TODO: Use metaclass with __getitem__ instead of a function?
 def String(size):
     class String(Array(Char, size)):
         f"""
