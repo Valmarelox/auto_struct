@@ -21,7 +21,7 @@ class EIClass(BaseEnum):
 
 
 @dataclass
-class ElfIdent(BasicStruct):
+class ElfIdent(BaseStruct):
     ei_magic: ElfMagic
     ei_class: EIClass
     ei_data: uint8_t
@@ -32,7 +32,7 @@ class ElfIdent(BasicStruct):
 
 
 @dataclass
-class Elf64Header(BasicStruct):
+class Elf64Header(BaseStruct):
     e_ident: ElfIdent
     e_type: uint16_t
     e_machine: uint16_t
@@ -97,7 +97,7 @@ class Shdr64Flags(BitFlag):
 
 
 @dataclass
-class Elf64SectionHeader(BasicStruct):
+class Elf64SectionHeader(BaseStruct):
     sh_name: uint32_t
     sh_type: ShdrType
     sh_flags: Shdr64Flags
@@ -170,7 +170,7 @@ class PhdrFlag(BitFlag):
 
 
 @dataclass
-class Elf64Phdr(BasicStruct):
+class Elf64Phdr(BaseStruct):
     p_type: PhdrType
     p_flags: PhdrFlag
     p_offset: uint64_t

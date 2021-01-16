@@ -1,6 +1,6 @@
 from dataclasses import dataclass
 
-from auto_struct import BasicStruct, uint8_t, Array, uint32_t, uint16_t
+from auto_struct import BaseStruct, uint8_t, Array, uint32_t, uint16_t
 
 
 class CHS(Array(uint8_t, 3)):
@@ -18,7 +18,7 @@ class CHS(Array(uint8_t, 3)):
 
 
 @dataclass
-class Partition(BasicStruct):
+class Partition(BaseStruct):
     status: uint8_t
     start: CHS
     type: uint8_t
@@ -31,7 +31,7 @@ class MBRSignature(uint16_t):
     pass
 
 @dataclass
-class MBR(BasicStruct):
+class MBR(BaseStruct):
     code: Array(uint8_t, 446)
     part_table: Array(Partition, 4)
     signature: MBRSignature

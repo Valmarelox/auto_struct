@@ -50,7 +50,3 @@ class BaseType(metaclass=BaseTypeMeta):
         return hash(self._rec_element_count()) + hash(type(self))
 
 
-class BaseSingleValueType(BaseType):
-    def __init__(self, value):
-        super().__init__()
-        self.value = value

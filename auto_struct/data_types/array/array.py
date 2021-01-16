@@ -1,6 +1,6 @@
 from typing import Sequence, Type, Any
 
-from ..basic_type import BaseType
+from auto_struct.data_types.base.base_type import BaseType
 from ...exceptions.type import ElementCountException
 
 
