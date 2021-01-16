@@ -7,6 +7,7 @@ Python 3.8 module using annotations and dataclasses for easily writing parsers f
 
 ### Usage example
 See [this](https://github.com/Valmarelox/auto_struct/blob/master/examples/elf_header_parser.py)
+also a WIP project using this package for parsing tar in pure python [pytar](https://github.com/Valmarelox/pytar)
 
 ### Contribution
 Contributers are welcome!
