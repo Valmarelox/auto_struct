@@ -2,7 +2,7 @@ from struct import Struct
 from types import FunctionType
 from typing import Optional, Sequence, Any, Dict
 
-from auto_struct.data_types.basic_type import BaseTypeMeta, BaseType
+from auto_struct.data_types.base.base_type import BaseTypeMeta, BaseType
 from auto_struct.exceptions.enum import NoSuchEnumElement
 
 

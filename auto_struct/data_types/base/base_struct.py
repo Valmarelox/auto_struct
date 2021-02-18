@@ -1,10 +1,11 @@
 import json
-from io import IOBase, BufferedIOBase
+from io import BufferedIOBase
 from struct import Struct
 from typing import get_type_hints, Sequence, Any, Type, Dict, Union
 
-from .basic_type import BaseType, BaseTypeMeta, create_struct
-from ..exceptions import StructSubParseException, TypeJSONEncodeException, ElementCountException
+from .base_type import BaseType, BaseTypeMeta, create_struct
+from ...exceptions import StructSubParseException, TypeJSONEncodeException, ElementCountException
+from ...exceptions.struct import NoSuchFieldException
 
 
 class BaseStructMeta(BaseTypeMeta):
@@ -19,7 +20,7 @@ class BaseStructMeta(BaseTypeMeta):
         return create_struct(fmt)
 
 
-class BasicStruct(BaseType, metaclass=BaseStructMeta):
+class BaseStruct(BaseType, metaclass=BaseStructMeta):
     """
     Basic struct type to be used with dataclasses
     e.g
@@ -32,12 +33,33 @@ class BasicStruct(BaseType, metaclass=BaseStructMeta):
     print(Message(1, [0] * 128))
     print(Message.parse('\x01' + '\x00' * 128))
     """
+
     def __post_init__(self):
         for (field, annotation) in self.annotations().items():
             try:
                 self.__dict__[field] = annotation(*self.__dict__[field])
             except Exception as e:
-                raise StructSubParseException(f'Error when initializing struct field "{field}" of type "{annotation}" with data "{self.__dict__[field]}"')
+                raise StructSubParseException(
+                    f'Error when initializing struct field "{field}" of type "{annotation}" with data "{self.__dict__[field]}"')
+
+    @classmethod
+    def offsetof(cls, field: str) -> int:
+        """
+        :param field: Name of field in struct
+        :return:  offset of the field in the struct
+        :raises: NoSuchFieldException when the field doesn't exist in the struct
+        """
+        offset = 0
+        for (field_in_struct, annotation) in cls.annotations().items():
+            if field == field_in_struct:
+                return offset
+            offset += len(annotation)
+        else:
+            raise NoSuchFieldException(f'Field {field} doesn\'t exist in the struct {cls.__name__}')
+
+    def __getitem__(self, item):
+        return bytes(self)[item]
+
 
     @classmethod
     def annotations(cls) -> Dict[str, Type]:
@@ -54,7 +76,8 @@ class BasicStruct(BaseType, metaclass=BaseStructMeta):
     @classmethod
     def build_tuple_tree(cls, values: Sequence[Any]) -> Sequence[Any]:
         if len(values) != cls._rec_element_count():
-             raise ElementCountException(f'build_tuple_tee received {len(values)} elements, expected: {cls._rec_element_count()}')
+            raise ElementCountException(
+                f'build_tuple_tee received {len(values)} elements, expected: {cls._rec_element_count()}')
         args = []
         for (name, annotation) in cls.annotations().items():
             try:
@@ -65,7 +88,7 @@ class BasicStruct(BaseType, metaclass=BaseStructMeta):
         return args
 
     @classmethod
-    def parse(cls, buffer: Union[BufferedIOBase, Sequence]) -> 'BasicStruct':
+    def parse(cls, buffer: Union[BufferedIOBase, Sequence]) -> 'BaseStruct':
         if isinstance(buffer, BufferedIOBase):
             buffer = buffer.read(len(cls))
         buffer = bytearray(buffer)
@@ -82,3 +105,11 @@ class BasicStruct(BaseType, metaclass=BaseStructMeta):
             raise TypeJSONEncodeException(f'Can\'t encode {type(x)}')
 
         return json.dumps(self.__dict__, default=default_handle)
+
+    def __bytes__(self) -> bytes:
+        data = b''
+        for (field, annotation) in self.annotations().items():
+            data += bytes(self.__dict__[field])
+        return data
+
+

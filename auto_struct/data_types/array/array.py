@@ -1,6 +1,6 @@
 from typing import Sequence, Type, Any
 
-from ..basic_type import BaseType
+from auto_struct.data_types.base.base_type import BaseType
 from ...exceptions.type import ElementCountException
 
 
@@ -36,7 +36,7 @@ def Array(element: Type[BaseType], size: int):
             return str(self._values)
 
         def __bytes__(self):
-            return bytes(self._values)
+            return b''.join(bytes(x) for x in self._values)
 
         def __iter__(self):
             for x in self._values:

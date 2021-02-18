@@ -1,4 +1,4 @@
-from ..basic_type import BaseSingleValueType
+from ..base.base_single_value_type import BaseSingleValueType
 from ...exceptions.integer import IntegerOutOfBounds
 
 
