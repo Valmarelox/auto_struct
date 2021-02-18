@@ -3,6 +3,7 @@ from .enum import *
 from .integer import *
 from .type import *
 from .parsing import *
+from .struct import *
 __all__ = (
     'BitNotDefined',
     'NoSuchEnumElement',
@@ -11,4 +12,5 @@ __all__ = (
     'TypeJSONEncodeException',
     'StructSubParseException',
     'StructDefinitionException',
+    'NoSuchFieldException'
 )
