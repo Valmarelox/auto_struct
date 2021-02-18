@@ -36,7 +36,7 @@ def Array(element: Type[BaseType], size: int):
             return str(self._values)
 
         def __bytes__(self):
-            return bytes(self._values)
+            return b''.join(bytes(x) for x in self._values)
 
         def __iter__(self):
             for x in self._values:

@@ -49,4 +49,9 @@ class BaseType(metaclass=BaseTypeMeta):
     def __hash__(self):
         return hash(self._rec_element_count()) + hash(type(self))
 
+    @property
+    def struct(self):
+        return type(self).struct
 
+    def __len__(self):
+        return len(type(self))
