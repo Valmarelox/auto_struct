@@ -13,10 +13,9 @@ class BaseStructMeta(BaseTypeMeta):
     def struct(cls) -> Struct:
         fmt = ''
         annotations = get_type_hints(cls)
-        for (var, annotation) in annotations.items():
-            # TODO: Function to build the full struct format for unpacking
-            # TODO: use asdict/astuple to build in the end - two dicts with the same keys should have the same order
-            fmt += annotation.struct.format
+        # TODO: Function to build the full struct format for unpacking
+        # TODO: use asdict/astuple to build in the end - two dicts with the same keys should have the same order
+        fmt = ''.join(annotation.struct.format for annotation in annotations.values())
         return create_struct(fmt)
 
 
@@ -38,7 +37,7 @@ class BaseStruct(BaseType, metaclass=BaseStructMeta):
         for (field, annotation) in self.annotations().items():
             try:
                 self.__dict__[field] = annotation(*self.__dict__[field])
-            except Exception as e:
+            except Exception:
                 raise StructSubParseException(
                     f'Error when initializing struct field "{field}" of type "{annotation}" with data "{self.__dict__[field]}"')
 
@@ -59,7 +58,6 @@ class BaseStruct(BaseType, metaclass=BaseStructMeta):
 
     def __getitem__(self, item):
         return bytes(self)[item]
-
 
     @classmethod
     def annotations(cls) -> Dict[str, Type]:
