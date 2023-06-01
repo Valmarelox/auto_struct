@@ -1,4 +1,5 @@
 venv
+cov.info
 .idea/
 *.pyc
 d
